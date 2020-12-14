@@ -1,13 +1,16 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import entity.Consumer;
 import entity.Contract;
 import entity.Distributor;
-import fileio.EntityRegister;
+import entity.EntityRegister;
 import fileio.Input;
 import update.CostChange;
 import update.MonthlyUpdate;
 
 public class Updater {
-    public void updateConsumers(EntityRegister entityRegister) {
+    public boolean updateConsumers(EntityRegister entityRegister) {
         for (Consumer consumer : entityRegister.getConsumers()) {
             if (consumer.isBankrupt()) {
                 if (consumer.getDistributor() != null) {
@@ -28,7 +31,7 @@ public class Updater {
             if (consumer.getDistributor() == null) {
                 Distributor myDistributor = entityRegister.getCheapestDistributor();
                 if (myDistributor == null) {
-                    break;
+                    return true;
                 }
                 
                 myDistributor.addContract(consumer);
@@ -54,6 +57,8 @@ public class Updater {
                 consumer.setBudget(newBudget);
             }
         }
+        
+        return false;
     }
     
     public void updateDistributors(EntityRegister entityRegister) {
@@ -63,7 +68,7 @@ public class Updater {
             }
             
             distributor.calculateBudget(entityRegister);
-            if (distributor.getBudget() <= 0) {
+            if (distributor.getBudget() < 0) {
                 distributor.setBankrupt(true);
                 continue;
             }
@@ -84,5 +89,18 @@ public class Updater {
         }
         
         input.getMonthlyUpdates().remove(0);
+    }
+
+    public void updateContracts(EntityRegister entityRegister) {
+        for (Distributor distributor : entityRegister.getDistributors()) {
+            List<Contract> expiredContracts = new ArrayList<Contract>();
+            for (Contract contract : distributor.getContracts()) {
+                if (entityRegister.findConsumer(contract.getConsumerId()).isBankrupt()) {
+                    expiredContracts.add(contract);
+                }
+            }
+            
+            distributor.getContracts().removeAll(expiredContracts);
+        }
     }
 }

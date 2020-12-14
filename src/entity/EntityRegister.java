@@ -1,9 +1,6 @@
-package fileio;
+package entity;
 
 import java.util.List;
-
-import entity.Consumer;
-import entity.Distributor;
 
 public class EntityRegister {
     private List<Consumer> consumers;
@@ -26,13 +23,20 @@ public class EntityRegister {
     }
     
     public Distributor getCheapestDistributor() {
-        long price = this.distributors.get(this.distributors.size() - 1).getPrice();
+        long price = 0;
+        for (Distributor distributor : distributors) {
+            if (!distributor.isBankrupt()) {
+                price = distributor.getPrice();
+            }
+        }
+        
         Distributor cheapestDistributor = null;
         // parcurg invers pentru a oferi prioritate celor cu id mai mic
         for (int i = this.distributors.size() - 1; i >= 0; i--) {
             Distributor distributor = this.distributors.get(i);
             if (distributor.getPrice() <= price && !distributor.isBankrupt()) {
                 cheapestDistributor = distributor;
+                price = distributor.getPrice();
             }
         }
         

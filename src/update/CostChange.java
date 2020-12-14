@@ -1,7 +1,7 @@
 package update;
 
 import entity.Distributor;
-import fileio.EntityRegister;
+import entity.EntityRegister;
 
 public class CostChange {
     private Integer id;

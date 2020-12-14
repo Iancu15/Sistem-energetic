@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import entity.Consumer;
 import entity.Distributor;
-import fileio.EntityRegister;
+import entity.EntityRegister;
 import fileio.Input;
 import fileio.Writer;
 
@@ -33,13 +33,19 @@ public class Main {
                 writer.writeFile(consumers, distributors);
             }
             
-            updater.updateConsumers(entityRegister);
+            boolean gameStopped = updater.updateConsumers(entityRegister);
+            if (gameStopped) {
+                break;
+            }
+            
             updater.updateDistributors(entityRegister);
             if (i == input.getNumberOfTurns())
                 break;
             
             updater.addMonthlyUpdate(input);
         }
+        
+        updater.updateContracts(entityRegister);
         
         writer.writeFile(entityRegister.getConsumers(), entityRegister.getDistributors());
     }

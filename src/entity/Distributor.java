@@ -8,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fileio.EntityRegister;
-
 @JsonPropertyOrder({"id", "budget", "isBankrupt", "contracts"})
 public class Distributor {
     private Integer id;
