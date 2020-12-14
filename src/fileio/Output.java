@@ -5,11 +5,11 @@ import java.util.List;
 import entity.Consumer;
 import entity.Distributor;
 
-public class Output {
+public final class Output {
     private List<Consumer> consumers;
     private List<Distributor> distributors;
-    
-    public Output(List<Consumer> consumers, List<Distributor> distributors) {
+
+    public Output(final List<Consumer> consumers, final List<Distributor> distributors) {
         this.consumers = consumers;
         this.distributors = distributors;
     }
@@ -18,7 +18,7 @@ public class Output {
         return consumers;
     }
 
-    public void setConsumers(List<Consumer> consumers) {
+    public void setConsumers(final List<Consumer> consumers) {
         this.consumers = consumers;
     }
 
@@ -26,7 +26,7 @@ public class Output {
         return distributors;
     }
 
-    public void setDistributors(List<Distributor> distributors) {
+    public void setDistributors(final List<Distributor> distributors) {
         this.distributors = distributors;
     }
 }

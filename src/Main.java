@@ -11,42 +11,43 @@ import fileio.Writer;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static void main(final String[] args) throws Exception {
+        final ObjectMapper objectMapper = new ObjectMapper();
         System.out.println(args[0]);
-        Input input = objectMapper.readValue(new File(args[0]), Input.class);
-        EntityRegister entityRegister = input.getEntityRegister();
-        Updater updater = new Updater();
-        String mode = "Test";
-        Writer writer = new Writer(args[0], mode);
-        
-        for (Distributor distributor : entityRegister.getDistributors()) {
-            int infrastructureCost = distributor.getInfrastructureCost();
-            int productionCost = distributor.getProductionCost();
+        final Input input = objectMapper.readValue(new File(args[0]), Input.class);
+        final EntityRegister entityRegister = input.getEntityRegister();
+        final Updater updater = new Updater();
+        final String mode = "test";
+        final Writer writer = new Writer(args[0], mode);
+
+        for (final Distributor distributor : entityRegister.getDistributors()) {
+            final int infrastructureCost = distributor.getInfrastructureCost();
+            final int productionCost = distributor.getProductionCost();
             distributor.changeCosts(infrastructureCost, productionCost, entityRegister);
         }
-        
+
+        final List<Consumer> consumers = entityRegister.getConsumers();
+        final List<Distributor> distributors = entityRegister.getDistributors();
         for (int i = 0; i <= input.getNumberOfTurns(); i++) {
-            List<Consumer> consumers = entityRegister.getConsumers();
-            List<Distributor> distributors = entityRegister.getDistributors();
+            // in cazul in care e pe modul StoreComplete afisez starea jocului de la fiecare tura
             if (mode.equals("StoreComplete")) {
                 writer.writeFile(consumers, distributors);
             }
-            
-            boolean gameStopped = updater.updateConsumers(entityRegister);
+
+            final boolean gameStopped = updater.updateConsumers(entityRegister);
             if (gameStopped) {
                 break;
             }
-            
+
             updater.updateDistributors(entityRegister);
             if (i == input.getNumberOfTurns())
                 break;
-            
+
             updater.addMonthlyUpdate(input);
         }
-        
+
         updater.updateContracts(entityRegister);
-        
-        writer.writeFile(entityRegister.getConsumers(), entityRegister.getDistributors());
+
+        writer.writeFile(consumers, distributors);
     }
 }

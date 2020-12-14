@@ -34,26 +34,26 @@ public final class Checkstyle {
      * DO NOT MODIFY
      */
     public static boolean testCheckstyle() {
-        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar",
+        final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar",
                 JAR_PATH, "-c", XML_PATH, "./");
 
         processBuilder.redirectErrorStream(true);
-        File log = new File(CHECKSTYLE_FILE);
+        final File log = new File(CHECKSTYLE_FILE);
         processBuilder.redirectOutput(log);
 
         try {
-            Process process = processBuilder.start();
+            final Process process = processBuilder.start();
             process.waitFor();
 
-            Path path = Paths.get(CHECKSTYLE_FILE);
-            long lineCount = Files.lines(path).count();
+            final Path path = Paths.get(CHECKSTYLE_FILE);
+            final long lineCount = Files.lines(path).count();
 
             long errors = 0;
             if (lineCount > MIN_LINES) {
                 errors = lineCount - NUM_CHECK_INFO;
             }
 
-            boolean checkstylePassed = errors <= MIN_CHECKSTYLE_ERR;
+            final boolean checkstylePassed = errors <= MIN_CHECKSTYLE_ERR;
 
             System.out.println("-----------------------------");
             System.out.println("Checkstyle: "
