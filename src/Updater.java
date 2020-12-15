@@ -40,7 +40,7 @@ public final class Updater {
                 }
             }
 
-            // ofera cel mai ieftin distributor consumatorului daca acesta nu are unul deja
+            // ofera cel mai ieftin distribuitor consumatorului daca acesta nu are unul deja
             if (consumer.getDistributor() == null) {
                 final Distributor myDistributor = entityRegister.getCheapestDistributor();
                 // daca nu s-a gasit niciun distribuitor nefalimentat, atunci se termina jocul
@@ -57,7 +57,7 @@ public final class Updater {
             final long newBudget = consumer.getBudget() - contract.getPrice() - consumer.getDebt();
             contract.setRemainedContractMonths(contract.getRemainedContractMonths() - 1);
 
-            // in caz ca nu are destui bani sa achite rata va ramane dator distributorului, daca
+            // in caz ca nu are destui bani sa achite rata va ramane dator distribuitorului, daca
             // este deja dator se declara falimentat
             // daca are destui bani i se retrag banii din cont
             if (newBudget < 0) {
@@ -81,7 +81,7 @@ public final class Updater {
     }
 
     /**
-     * Actualizeaza distributorii
+     * Actualizeaza distribuitorii
      * @param entityRegister    Registrul de entitati
      */
     public void updateDistributors(final EntityRegister entityRegister) {
@@ -90,7 +90,7 @@ public final class Updater {
                 continue;
             }
 
-            distributor.calculateBudget(entityRegister);
+            distributor.calculateBudget();
             if (distributor.getBudget() < 0) {
                 distributor.setBankrupt(true);
                 continue;

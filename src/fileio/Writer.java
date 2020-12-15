@@ -16,11 +16,18 @@ import entity.Distributor;
  *
  */
 public final class Writer {
-    private final FileWriter file;
+    /**
+     * Formatul path-ului fisierului de citire
+     */
+    private String inputFormat;
+    /**
+     * Modul de scriere: Store, StoreComplete sau Test
+     */
+    private String mode;
 
     public Writer(final String inputFormat, final String mode) throws IOException {
-        final FileWriterFactory factory = FileWriterFactory.getInstance();
-        this.file = factory.createFileWriter(mode, inputFormat).getOutput();
+        this.inputFormat = inputFormat;
+        this.mode = mode;
     }
 
     /**
@@ -35,6 +42,8 @@ public final class Writer {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Output output = new Output(consumers, distributors);
 
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(this.file, output);
+        final FileWriterFactory factory = FileWriterFactory.getInstance();
+        FileWriter file = factory.createFileWriter(this.mode, this.inputFormat).getOutput();
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, output);
     }
 }

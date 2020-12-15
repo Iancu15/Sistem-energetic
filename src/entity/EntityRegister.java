@@ -28,8 +28,8 @@ public final class EntityRegister {
     }
 
     /**
-     * Cauta distributorul cu cea mai ieftina rata
-     * @return  Cel mai ieftin distributor
+     * Cauta distribuitorul cu cea mai ieftina rata
+     * @return  Cel mai ieftin distribuitor
      */
     public Distributor getCheapestDistributor() {
         long price = 0;

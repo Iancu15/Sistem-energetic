@@ -30,7 +30,7 @@ public class Main {
         final List<Distributor> distributors = entityRegister.getDistributors();
         for (int i = 0; i <= input.getNumberOfTurns(); i++) {
             // in cazul in care e pe modul StoreComplete afisez starea jocului de la fiecare tura
-            if (mode.equals("StoreComplete")) {
+            if (mode.toLowerCase().equals("storecomplete")) {
                 writer.writeFile(consumers, distributors);
             }
 

@@ -109,7 +109,8 @@ public final class Distributor {
      * @param productionCost
      * @param entityRegister
      */
-    public void changeCosts(final int infrastructureCost, final int productionCost, final EntityRegister entityRegister) {
+    public void changeCosts(final int infrastructureCost, final int productionCost, 
+                                                            final EntityRegister entityRegister) {
         this.infrastructureCost = infrastructureCost;
         this.productionCost = productionCost;
         final long profit = Math.round(Math.floor(0.2 * productionCost));
@@ -164,7 +165,7 @@ public final class Distributor {
      * Calculeaza noul buget dupa plata costurilor si incasarea ratelor
      * @param entityRegister
      */
-    public void calculateBudget(final EntityRegister entityRegister) {
+    public void calculateBudget() {
         // daca nu are consumatori plateste doar pentru infrastructura
         if (this.contracts.isEmpty()) {
             this.budget -= this.infrastructureCost;

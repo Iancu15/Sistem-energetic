@@ -1,0 +1,77 @@
+1. Citirea
+
+Citirea o fac folosind ObjectMapper alaturi de adnotariile potrivite pentru
+ca programul sa vada proprietatile din fisier chiar daca au nume diferit in
+cod: @JsonAlias, @JsonProperty.
+
+Pentru ca citirea este automata nu am mai putut folosi Factory pentru
+crearea de entitati. 
+
+Insa consider ca ObjectMapper este eficient din punct de vedere al constructiei.
+Pentru a citi o lista de entitati noi trebuie doar sa adaugi un camp de getteri
+si setteri pentru lista, astfel modifici doar intr-un singur loc pentru fiecare
+intrare noua oricare ar fi ea.
+
+2. Consumer
+
+Clasa contine campuri:
+-constante si independente de distribuitor: id, monthlyIncome;
+-variabile si independente de distribuitor: budget, isBankrupt;
+        ➡bugetul se modifica conform pretului stabilit in contract
+        ➡starea de faliment e o trasatura inerenta consumatorului
+-variabile si dependente de distribuitor: debt, distribuitor.
+        ➡datoria este impusa de un distribuitor
+
+3. Distributor
+
+Clasa contine campuri:
+-constante: id, contractLength;
+-variabile: budget, infrastructureCost, productionCost, price, contracts,
+isBankrupt
+        ➡bugetul se calculeaza cu infrastructureCost, productionCost si contracts
+care sunt campuri specifice distribuitorului
+        ➡starea de faliment e o trasatura inerenta distribuitorului
+        ➡pentru calcularea pretului in metoda changeCosts este nevoie de registrul
+de entitati pentru a accesa consumatorii, astfel pretul este dependent de
+EntityRegister si de lista acestuia de consumatori
+        ➡lista de contracte este specifica distribuitorului astfel fiecare
+instanta Contract este atribuita unei instante Distributor
+
+Clasa contine metodele:
+-fara parametrii care lucreaza intern: calculateBudget
+-cu parametru specific unui consumator: removeContract, findContract,
+addContract
+        ➡cele 3 metode fac legatura intre clasa Consumer si clasa Contract
+        ➡desi clasa Contract este atribuita unui distribuitor si accesata prin 
+clasa Distributor, aceasta este adaugata si stearsa la comanda unui Consumer
+-cu parametru EntityRegister: recalculatePrice, changeCosts
+
+4. Afisare
+
+Afisarea se face folosind ObjectMapper alaturi de adnotarile potrivite pentru
+a ignora campuri(@JsonIgnore) si a schimba ordinea la output(@JsonPropertyOrder).
+
+Clasa Writer, ce se foloseste pentru scriere, primeste la citire formatul
+path-ului fisierului de citire si un sir ce specifica modul de scriere. Sunt 3
+moduri specifice de scriere:
+-Test care testeaza rezultatul prin suprascrieri repetate in results.out;
+-Store care stocheaza fisierul de output in folderul checker/resources/out
+cu acelasi nume ca fisierul de citire;
+-StoreComplete este o extindere a modului Store care stocheaza informatiile,
+in fisierul de output, de la fiecare iteratie a jocului.
+
+Fisierul este accesat prin intermediul unui FileWriter ce este stocat in clasa
+wrapper FileWriterClass. Exista un fiu al clasei FileWriterClass pentru fiecare
+mod specificat mai sus. Instantele de FileWriterClass sunt create folosind
+metoda createFileWriter din clasa de tip factory singleton cu numele 
+FileWriterFactory. Metoda createFileWriter primeste modul si formatul path-ului
+fisierului de citire si creeaza o instanta de FileWriterClass specifica
+modului.
+
+
+
+
+
+
+
+

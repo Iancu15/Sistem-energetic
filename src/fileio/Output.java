@@ -5,6 +5,11 @@ import java.util.List;
 import entity.Consumer;
 import entity.Distributor;
 
+/**
+ * Clasa ce contine listele de entitati ce vor fi afisate la output
+ * @author alex
+ *
+ */
 public final class Output {
     private List<Consumer> consumers;
     private List<Distributor> distributors;
