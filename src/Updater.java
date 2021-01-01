@@ -4,7 +4,9 @@ import java.util.List;
 import entity.Consumer;
 import entity.Contract;
 import entity.Distributor;
+import entity.Entity;
 import entity.EntityRegister;
+import entity.Producer;
 import fileio.Input;
 import update.CostChange;
 import update.MonthlyUpdate;
@@ -108,8 +110,16 @@ public final class Updater {
     public void addMonthlyUpdate(final Input input) {
         final MonthlyUpdate update = input.getMonthlyUpdates().get(0);
         final EntityRegister entityRegister = input.getEntityRegister();
-        for (final CostChange costChange : update.getCostsChanges()) {
-            costChange.updateDistributor(entityRegister);
+        final List<Distributor> distributors = entityRegister.getDistributors();
+        for (final CostChange costChange : update.getDistributorChanges()) {
+            Entity distributor = entityRegister.findEntity(costChange.getId(), distributors);
+            costChange.updateDistributor(((Distributor) distributor));
+        }
+        
+        final List<Producer> producers = entityRegister.getProducers();
+        for (final CostChange costChange : update.getProducerChanges()) {
+            Entity producer = entityRegister.findEntity(costChange.getId(), producers);
+            costChange.updateProducer(((Producer) producer));
         }
 
         for (final Consumer consumer : update.getNewConsumers()) {
@@ -124,10 +134,12 @@ public final class Updater {
      * @param entityRegister
      */
     public void updateContracts(final EntityRegister entityRegister) {
+        List<Consumer> consumers = entityRegister.getConsumers();
         for (final Distributor distributor : entityRegister.getDistributors()) {
             final List<Contract> expiredContracts = new ArrayList<Contract>();
             for (final Contract contract : distributor.getContracts()) {
-                if (entityRegister.findConsumer(contract.getConsumerId()).isBankrupt()) {
+                Entity consumer = entityRegister.findEntity(contract.getConsumerId(), consumers);
+                if (((Consumer) consumer).isBankrupt()) {
                     expiredContracts.add(contract);
                 }
             }

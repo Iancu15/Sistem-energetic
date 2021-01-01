@@ -8,13 +8,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"id", "budget", "isBankrupt", "contracts"})
-public final class Distributor {
-    private Integer id;
+import strategy.EnergyChoiceStrategyType;
+import update.CostChange;
+
+@JsonPropertyOrder({"id", "energyNeededKW", "price", "budget", "producerStrategy", "isBankrupt", "contracts"})
+public final class Distributor extends Entity {
     private int contractLength;
     private long budget;
     private int infrastructureCost;
     private int productionCost;
+    private int energyNeededKW;
+    private EnergyChoiceStrategyType producerStrategy;
     /**
      * Pretul curent cu care se promoveaza distribuitorul
      */
@@ -22,18 +26,15 @@ public final class Distributor {
     /**
      * Lista cu contractele curente
      */
-    private List<Contract> contracts = new ArrayList<Contract>();
+    private List<Contract> contracts;
+    
     /**
      * Evidenta starii de falimentare
      */
     private boolean isBankrupt = false;
-
-    public final Integer getId() {
-        return id;
-    }
-
-    public void setId(final int id) {
-        this.id = id;
+    
+    public Distributor() {
+        this.contracts = new ArrayList<Contract>();
     }
 
     @JsonIgnore
@@ -67,16 +68,13 @@ public final class Distributor {
     public void setInfrastructureCost(final int infrastructureCost) {
         this.infrastructureCost = infrastructureCost;
     }
-
+    
     @JsonIgnore
-    @JsonAlias("initialProductionCost")
     public int getProductionCost() {
         return productionCost;
     }
 
-    @JsonProperty
-    @JsonAlias("initialProductionCost")
-    public void setProductionCost(final int productionCost) {
+    public void setProductionCost(int productionCost) {
         this.productionCost = productionCost;
     }
 
@@ -98,9 +96,30 @@ public final class Distributor {
         this.isBankrupt = isBankrupt;
     }
 
-    @JsonIgnore
+    @JsonProperty("contractCost")
     public long getPrice() {
         return price;
+    }
+    
+    @JsonIgnore
+    public long setPrice() {
+        return price;
+    }
+
+    public int getEnergyNeededKW() {
+        return energyNeededKW;
+    }
+
+    public void setEnergyNeededKW(int energyNeededKW) {
+        this.energyNeededKW = energyNeededKW;
+    }
+
+    public EnergyChoiceStrategyType getProducerStrategy() {
+        return producerStrategy;
+    }
+
+    public void setProducerStrategy(EnergyChoiceStrategyType producerStrategy) {
+        this.producerStrategy = producerStrategy;
     }
 
     /**
@@ -109,7 +128,7 @@ public final class Distributor {
      * @param productionCost
      * @param entityRegister
      */
-    public void changeCosts(final int infrastructureCost, final int productionCost, 
+    public void changeCostsOld(final int infrastructureCost, final int productionCost, 
                                                             final EntityRegister entityRegister) {
         this.infrastructureCost = infrastructureCost;
         this.productionCost = productionCost;
@@ -121,9 +140,11 @@ public final class Distributor {
 
         // numar consumatorii care nu au falimentat tura asta
         int numberOfConsumers = 0;
+        List<Consumer> consumers = entityRegister.getConsumers();
         for (final Contract contract : this.contracts) {
             if (contract.isOnHold()) {
-                if (entityRegister.findConsumer(contract.getConsumerId()).isBankrupt()) {
+                Entity consumer = entityRegister.findEntity(contract.getConsumerId(), consumers);
+                if (((Consumer) consumer).isBankrupt()) {
                     continue;
                 }
             }
@@ -148,7 +169,7 @@ public final class Distributor {
      * @param entityRegister
      */
     public void recalculatePrice(final EntityRegister entityRegister) {
-        this.changeCosts(this.infrastructureCost, this.productionCost, entityRegister);
+        this.changeCostsOld(this.infrastructureCost, this.productionCost, entityRegister);
     }
 
     /**
@@ -209,5 +230,9 @@ public final class Distributor {
         }
 
         return null;
+    }
+    
+    public void changeInfrastructureCost(CostChange costChange) {
+        
     }
 }

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import entity.Consumer;
 import entity.Distributor;
+import entity.Producer;
 
 /**
  * Ajuta in scrierea registrului de consumatori si distributori, in format JSON, intr-un fisier
@@ -37,10 +38,10 @@ public final class Writer {
      * @param distributors  Lista finala de distributori
      * @throws IOException
      */
-    public void writeFile(final List<Consumer> consumers,
-                        final List<Distributor> distributors) throws IOException{
+    public void writeFile(final List<Consumer> consumers, final List<Distributor> distributors, 
+                                            final List<Producer> producers) throws IOException{
         final ObjectMapper objectMapper = new ObjectMapper();
-        final Output output = new Output(consumers, distributors);
+        final Output output = new Output(consumers, distributors, producers);
 
         final FileWriterFactory factory = FileWriterFactory.getInstance();
         FileWriter file = factory.createFileWriter(this.mode, this.inputFormat).getOutput();

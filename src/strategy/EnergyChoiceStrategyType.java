@@ -1,4 +1,4 @@
-package strategies;
+package strategy;
 
 /**
  * Strategy types for distributors to choose their producers

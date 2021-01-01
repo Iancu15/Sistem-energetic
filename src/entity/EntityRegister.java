@@ -10,6 +10,7 @@ import java.util.List;
 public final class EntityRegister {
     private List<Consumer> consumers;
     private List<Distributor> distributors;
+    private List<Producer> producers;
 
     public List<Consumer> getConsumers() {
         return consumers;
@@ -25,6 +26,14 @@ public final class EntityRegister {
 
     public void setDistributors(final List<Distributor> distributors) {
         this.distributors = distributors;
+    }
+
+    public List<Producer> getProducers() {
+        return producers;
+    }
+
+    public void setProducers(List<Producer> producers) {
+        this.producers = producers;
     }
 
     /**
@@ -52,10 +61,10 @@ public final class EntityRegister {
         return cheapestDistributor;
     }
 
-    public Consumer findConsumer(final Integer consumerId) {
-        for (final Consumer consumer : this.consumers) {
-            if (consumer.getId().equals(consumerId)) {
-                return consumer;
+    public Entity findEntity(final Integer Id, List<? extends Entity> entities) {
+        for (final Entity entity : entities) {
+            if (entity.getId().equals(Id)) {
+                return entity;
             }
         }
 

@@ -11,7 +11,8 @@ import entity.Consumer;
  */
 public final class MonthlyUpdate {
     private List<Consumer> newConsumers;
-    private List<CostChange> costsChanges;
+    private List<CostChange> distributorChanges;
+    private List<CostChange> producerChanges;
 
     public List<Consumer> getNewConsumers() {
         return newConsumers;
@@ -21,11 +22,19 @@ public final class MonthlyUpdate {
         this.newConsumers = newConsumers;
     }
 
-    public List<CostChange> getCostsChanges() {
-        return costsChanges;
+    public List<CostChange> getDistributorChanges() {
+        return distributorChanges;
     }
 
-    public void setCostsChanges(final List<CostChange> costsChanges) {
-        this.costsChanges = costsChanges;
+    public void setDistributorChanges(List<CostChange> distributorChanges) {
+        this.distributorChanges = distributorChanges;
+    }
+
+    public List<CostChange> getProducerChanges() {
+        return producerChanges;
+    }
+
+    public void setProduceChanges(List<CostChange> produceChanges) {
+        this.producerChanges = produceChanges;
     }
 }

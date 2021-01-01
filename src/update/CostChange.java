@@ -1,7 +1,10 @@
 package update;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import entity.Distributor;
 import entity.EntityRegister;
+import entity.Producer;
 
 /**
  * Contine modificarile de costuri ale unui distributor la finalul unei anumite ture
@@ -10,8 +13,7 @@ import entity.EntityRegister;
  */
 public final class CostChange {
     private Integer id;
-    private int infrastructureCost;
-    private int productionCost;
+    private int valueChange;
 
     public Integer getId() {
         return id;
@@ -20,33 +22,22 @@ public final class CostChange {
     public void setId(final int id) {
         this.id = id;
     }
-
-    public Integer getInfrastructureCost() {
-        return infrastructureCost;
+    
+    @JsonAlias({"infrastructureCost", "energyPerDistributor"})
+    public int getValueChange() {
+        return valueChange;
     }
-
-    public void setInfrastructureCost(final Integer infrastructureCost) {
-        this.infrastructureCost = infrastructureCost;
+    
+    @JsonAlias({"infrastructureCost", "energyPerDistributor"})
+    public void setValueChange(int valueChange) {
+        this.valueChange = valueChange;
     }
-
-    public Integer getProductionCost() {
-        return productionCost;
+    
+    public void updateDistributor(Distributor distributor) {
+        distributor.setInfrastructureCost(this.valueChange);
     }
-
-    public void setProductionCost(final Integer productionCost) {
-        this.productionCost = productionCost;
-    }
-
-    /**
-     * Actualizeaza costurile distributorului cu id-ul aferent instantei
-     * @param entityRegister
-     */
-    public void updateDistributor(final EntityRegister entityRegister) {
-        for (final Distributor distributor : entityRegister.getDistributors()) {
-            if (distributor.getId().equals(this.id)) {
-                distributor.changeCosts(this.infrastructureCost, this.productionCost, entityRegister);
-                break;
-            }
-        }
+    
+    public void updateProducer(Producer producer) {
+        producer.setEnergyPerDistributor(this.valueChange);
     }
 }
