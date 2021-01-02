@@ -2,6 +2,8 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,14 +11,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import strategy.EnergyChoiceStrategyType;
-import update.CostChange;
 
+@SuppressWarnings("deprecation")
 @JsonPropertyOrder({"id", "energyNeededKW", "price", "budget", "producerStrategy", "isBankrupt", "contracts"})
-public final class Distributor extends Entity {
+public final class Distributor implements Entity, Observer {
+    private Integer id;
     private int contractLength;
     private long budget;
     private int infrastructureCost;
-    private int productionCost;
+    private long productionCost;
     private int energyNeededKW;
     private EnergyChoiceStrategyType producerStrategy;
     /**
@@ -32,9 +35,18 @@ public final class Distributor extends Entity {
      * Evidenta starii de falimentare
      */
     private boolean isBankrupt = false;
+    private boolean needsToChangeProducer;
     
     public Distributor() {
         this.contracts = new ArrayList<Contract>();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @JsonIgnore
@@ -70,11 +82,11 @@ public final class Distributor extends Entity {
     }
     
     @JsonIgnore
-    public int getProductionCost() {
+    public long getProductionCost() {
         return productionCost;
     }
 
-    public void setProductionCost(int productionCost) {
+    public void setProductionCost(long productionCost) {
         this.productionCost = productionCost;
     }
 
@@ -122,16 +134,21 @@ public final class Distributor extends Entity {
         this.producerStrategy = producerStrategy;
     }
 
+    public boolean needsToChangeProducer() {
+        return needsToChangeProducer;
+    }
+
+    public void setNeedsToChangeProducer(boolean needsToChangeProducer) {
+        this.needsToChangeProducer = needsToChangeProducer;
+    }
+
     /**
      * Schimba costurile si pretul distribuitorului
      * @param infrastructureCost
      * @param productionCost
      * @param entityRegister
      */
-    public void changeCostsOld(final int infrastructureCost, final int productionCost, 
-                                                            final EntityRegister entityRegister) {
-        this.infrastructureCost = infrastructureCost;
-        this.productionCost = productionCost;
+    public void calculatePrice(final EntityRegister entityRegister) {
         final long profit = Math.round(Math.floor(0.2 * productionCost));
         if (this.contracts.isEmpty()) {
             this.price = infrastructureCost + productionCost + profit;
@@ -168,8 +185,10 @@ public final class Distributor extends Entity {
      * Recalculez pretul in functie de numarul curent de consumatori
      * @param entityRegister
      */
-    public void recalculatePrice(final EntityRegister entityRegister) {
-        this.changeCostsOld(this.infrastructureCost, this.productionCost, entityRegister);
+    public void changeInfrastructureCost(final int infrastructureCost, 
+                                                            final EntityRegister entityRegister) {
+        this.infrastructureCost = infrastructureCost;
+        this.calculatePrice(entityRegister);
     }
 
     /**
@@ -231,8 +250,9 @@ public final class Distributor extends Entity {
 
         return null;
     }
-    
-    public void changeInfrastructureCost(CostChange costChange) {
-        
+
+    @Override
+    public void update(Observable o, Object arg) {
+        this.needsToChangeProducer = true;
     }
 }

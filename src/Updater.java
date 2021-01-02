@@ -99,7 +99,7 @@ public final class Updater {
             }
 
             // recalculez pretul in functie de numarul curent de consumatori
-            distributor.recalculatePrice(entityRegister);
+            distributor.calculatePrice(entityRegister);
         }
     }
 

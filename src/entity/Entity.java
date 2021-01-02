@@ -1,13 +1,8 @@
 package entity;
 
-public class Entity {
-    private Integer id;
+public interface Entity {
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId();
+    public void setId(Integer id);
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 }

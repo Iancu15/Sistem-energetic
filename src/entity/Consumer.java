@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({"id", "isBankrupt", "budget"})
-public final class Consumer extends Entity {
+public final class Consumer implements Entity {
+    private Integer id;
     private long budget;
     private int monthlyIncome;
     /**
@@ -21,6 +22,14 @@ public final class Consumer extends Entity {
      * Distribuitorul cu care are un contract in momentul de fata
      */
     private Distributor distributor = null;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     @JsonProperty("budget")
     @JsonAlias("initialBudget")
