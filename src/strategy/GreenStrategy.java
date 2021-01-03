@@ -13,10 +13,10 @@ public class GreenStrategy extends EnergyChoiceStrategy {
         public int compare(Producer producer1, Producer producer2) {
             if (producer1.getEnergyType().isRenewable() == producer2.getEnergyType().isRenewable()) {
                 if (producer1.getPriceKW().compareTo(producer2.getPriceKW()) == 0) {
-                    if (producer1.getEnergyPerDistributor().compareTo(producer2.getEnergyPerDistributor()) == 0)
+                    if (producer2.getEnergyPerDistributor().compareTo(producer1.getEnergyPerDistributor()) == 0)
                         return producer1.getId().compareTo(producer2.getId());
                     
-                    return producer1.getEnergyPerDistributor().compareTo(producer2.getEnergyPerDistributor());
+                    return producer2.getEnergyPerDistributor().compareTo(producer1.getEnergyPerDistributor());
                 }
                 
                 return producer1.getPriceKW().compareTo(producer2.getPriceKW());
@@ -25,10 +25,10 @@ public class GreenStrategy extends EnergyChoiceStrategy {
             // daca ajunge aici inseamna ca au valori diferite, iar daca producatorul 1 are
             // energie regenerabila, atunci producatorul 2 nu va avea
             if (producer1.getEnergyType().isRenewable()) {
-                return 1;
+                return -1;
             }
             
-            return -1;
+            return 1;
         }
     }
 

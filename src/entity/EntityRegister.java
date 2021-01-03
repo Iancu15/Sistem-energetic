@@ -2,6 +2,10 @@ package entity;
 
 import java.util.List;
 
+import strategy.EnergyChoiceStrategy;
+import strategy.EnergyChoiceStrategyFactory;
+import strategy.EnergyChoiceStrategyType;
+
 /**
  * Registrul ce tine cont de toate entitatile ce au participat in joc
  * @author alex
@@ -70,4 +74,13 @@ public final class EntityRegister {
 
         return null;
     }
+
+    public void assignProducersToDistributor(Distributor distributor) {
+        EnergyChoiceStrategyType type = distributor.getProducerStrategy();
+        EnergyChoiceStrategyFactory factory = EnergyChoiceStrategyFactory.getInstance();
+        EnergyChoiceStrategy strategy = factory.createEnergyChoiceStrategy(type);
+        strategy.assignProducers(this.producers, distributor);
+        distributor.calculatePrice(this);
+    }
+
 }

@@ -9,9 +9,6 @@ import entity.EntityRegister;
 import entity.Producer;
 import fileio.Input;
 import fileio.Writer;
-import strategy.EnergyChoiceStrategy;
-import strategy.EnergyChoiceStrategyFactory;
-import strategy.EnergyChoiceStrategyType;
 
 public class Main {
 
@@ -21,20 +18,16 @@ public class Main {
         final Input input = objectMapper.readValue(new File(args[0]), Input.class);
         final EntityRegister entityRegister = input.getEntityRegister();
         final Updater updater = new Updater();
-        final String mode = "store";
+        final String mode = "test";
         final Writer writer = new Writer(args[0], mode);
 
-        List<Consumer> consumers = entityRegister.getConsumers();
         List<Distributor> distributors = entityRegister.getDistributors();
-        List<Producer> producers = entityRegister.getProducers();
-        EnergyChoiceStrategyFactory factory = EnergyChoiceStrategyFactory.getInstance();
-        for (final Distributor distributor : entityRegister.getDistributors()) {
-            EnergyChoiceStrategyType type = distributor.getProducerStrategy();
-            EnergyChoiceStrategy strategy = factory.createEnergyChoiceStrategy(type);
-            strategy.assignProducers(producers, distributor);
-            distributor.calculatePrice(entityRegister);
+        for (final Distributor distributor : distributors) {
+            entityRegister.assignProducersToDistributor(distributor);
         }
 
+        List<Consumer> consumers = entityRegister.getConsumers();
+        List<Producer> producers = entityRegister.getProducers();
         for (int i = 0; i <= input.getNumberOfTurns(); i++) {
             // in cazul in care e pe modul StoreComplete afisez starea jocului de la fiecare tura
             if (mode.toLowerCase().equals("storecomplete")) {
@@ -51,9 +44,19 @@ public class Main {
                 break;
             
             updater.addMonthlyUpdate(input);
+            
+            for (Distributor distributor : entityRegister.getDistributors()) {
+                if (distributor.needsToChangeProducer()) {
+                    entityRegister.assignProducersToDistributor(distributor);
+                }
+            }
+            
+            updater.updateProducers(entityRegister, i);
         }
 
         updater.updateContracts(entityRegister);
+        // reordonez lista de producatori dupa id pentru scriere
+        entityRegister.getProducers().sort((u, v) -> u.getId() - v.getId());
 
         writer.writeFile(consumers, distributors, producers);
     }

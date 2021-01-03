@@ -39,5 +39,6 @@ public final class CostChange {
     
     public void updateProducer(Producer producer) {
         producer.setEnergyPerDistributor(this.valueChange);
+        producer.notifyDistributors();
     }
 }

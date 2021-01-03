@@ -27,8 +27,7 @@ public class EnergyChoiceStrategyFactory {
      * @return      Strategia corespunzatoarea label-ului
      * @throws IOException
      */
-    public EnergyChoiceStrategy createEnergyChoiceStrategy(final EnergyChoiceStrategyType type) 
-                                                                            throws IOException {
+    public EnergyChoiceStrategy createEnergyChoiceStrategy(final EnergyChoiceStrategyType type) {
         switch(type) {
             case GREEN: return new GreenStrategy();
             case PRICE: return new PriceStrategy();

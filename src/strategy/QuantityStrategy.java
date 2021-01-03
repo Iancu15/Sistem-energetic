@@ -12,10 +12,10 @@ public class QuantityStrategy extends EnergyChoiceStrategy {
     private class QuantityComparator implements Comparator<Producer> {
         @Override
         public int compare(Producer producer1, Producer producer2) {
-            if (producer1.getEnergyPerDistributor().compareTo(producer2.getEnergyPerDistributor()) == 0)
+            if (producer2.getEnergyPerDistributor().compareTo(producer1.getEnergyPerDistributor()) == 0)
                 return producer1.getId().compareTo(producer2.getId());
             
-            return producer1.getEnergyPerDistributor().compareTo(producer2.getEnergyPerDistributor());
+            return producer2.getEnergyPerDistributor().compareTo(producer1.getEnergyPerDistributor());
         }
     }
 

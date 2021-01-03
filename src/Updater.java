@@ -6,6 +6,7 @@ import entity.Contract;
 import entity.Distributor;
 import entity.Entity;
 import entity.EntityRegister;
+import entity.MonthlyStat;
 import entity.Producer;
 import fileio.Input;
 import update.CostChange;
@@ -110,16 +111,17 @@ public final class Updater {
     public void addMonthlyUpdate(final Input input) {
         final MonthlyUpdate update = input.getMonthlyUpdates().get(0);
         final EntityRegister entityRegister = input.getEntityRegister();
-        final List<Distributor> distributors = entityRegister.getDistributors();
-        for (final CostChange costChange : update.getDistributorChanges()) {
-            Entity distributor = entityRegister.findEntity(costChange.getId(), distributors);
-            costChange.updateDistributor(((Distributor) distributor));
-        }
-        
         final List<Producer> producers = entityRegister.getProducers();
         for (final CostChange costChange : update.getProducerChanges()) {
             Entity producer = entityRegister.findEntity(costChange.getId(), producers);
             costChange.updateProducer(((Producer) producer));
+        }
+
+        final List<Distributor> distributors = entityRegister.getDistributors();
+        for (final CostChange costChange : update.getDistributorChanges()) {
+            Entity distributor = entityRegister.findEntity(costChange.getId(), distributors);
+            costChange.updateDistributor(((Distributor) distributor));
+            ((Distributor) distributor).calculatePrice(entityRegister);
         }
 
         for (final Consumer consumer : update.getNewConsumers()) {
@@ -146,6 +148,14 @@ public final class Updater {
 
             // elimin contractele facute cu consumatori falimentati
             distributor.getContracts().removeAll(expiredContracts);
+        }
+    }
+    
+    public void updateProducers(final EntityRegister entityRegister, final int turn) {
+        for (Producer producer : entityRegister.getProducers()) {
+            MonthlyStat monthlyStat = new MonthlyStat(turn + 1);
+            monthlyStat.getDistributorsIds().addAll(producer.getDistributorsIds());
+            producer.getMonthlyStats().add(monthlyStat);
         }
     }
 }

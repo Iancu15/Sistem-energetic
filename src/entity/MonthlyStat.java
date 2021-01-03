@@ -5,10 +5,13 @@ import java.util.List;
 
 public class MonthlyStat {
     private int month;
-    private List<Integer> distributorsIds;
+    private List<Integer> distributorsIds = new ArrayList<Integer>();
     
     public MonthlyStat() {
-        this.distributorsIds = new ArrayList<Integer>();
+    }
+    
+    public MonthlyStat(int month) {
+        this.month = month;
     }
 
     public int getMonth() {
