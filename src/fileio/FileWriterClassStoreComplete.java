@@ -5,8 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Fiu al clasei FileWriterClass ce contine FileWriter-ul care stocheaza fisierele de output in
- * forma completa(toate iteratiile jocului)
+ * Fiu al clasei FileWriterClass ce contine FileWriter-ul care stocheaza
+ * fisierele de output in forma completa(toate iteratiile jocului)
+ *
  * @author alex
  *
  */

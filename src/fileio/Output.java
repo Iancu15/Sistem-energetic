@@ -8,6 +8,7 @@ import entity.Producer;
 
 /**
  * Clasa ce contine listele de entitati ce vor fi afisate la output
+ *
  * @author alex
  *
  */
@@ -17,7 +18,7 @@ public final class Output {
     private List<Producer> energyProducers;
 
     public Output(final List<Consumer> consumers, final List<Distributor> distributors,
-                                                    final List<Producer> producers) {
+            final List<Producer> producers) {
         this.consumers = consumers;
         this.distributors = distributors;
         this.energyProducers = producers;
@@ -43,7 +44,7 @@ public final class Output {
         return energyProducers;
     }
 
-    public void setEnergyProducers(List<Producer> energyProducers) {
+    public void setEnergyProducers(final List<Producer> energyProducers) {
         this.energyProducers = energyProducers;
     }
 }

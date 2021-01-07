@@ -28,14 +28,14 @@ public final class Checkstyle {
     public static final int LARGE_TEST = 3;
     public static final int MAX_LENGTH = 50;
 
-    private Checkstyle() { }
+    private Checkstyle() {
+    }
 
     /**
      * DO NOT MODIFY
      */
     public static boolean testCheckstyle() {
-        final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar",
-                JAR_PATH, "-c", XML_PATH, "./");
+        final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", JAR_PATH, "-c", XML_PATH, "./");
 
         processBuilder.redirectErrorStream(true);
         final File log = new File(CHECKSTYLE_FILE);
@@ -56,8 +56,7 @@ public final class Checkstyle {
             final boolean checkstylePassed = errors <= MIN_CHECKSTYLE_ERR;
 
             System.out.println("-----------------------------");
-            System.out.println("Checkstyle: "
-                    + (checkstylePassed ? "Ok" : "Failed"));
+            System.out.println("Checkstyle: " + (checkstylePassed ? "Ok" : "Failed"));
             System.out.println("Checkstyle errors: " + errors);
             return checkstylePassed;
         } catch (IOException | InterruptedException e) {

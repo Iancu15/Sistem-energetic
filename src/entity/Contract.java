@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Contractul dintre un consumator si un distributor
+ *
  * @author alex
  *
  */
@@ -21,9 +22,8 @@ public final class Contract {
      */
     private int remainedContractMonths;
     /**
-     * Starea contractului
-     * false - contractul se desfasoara in conformitate cu cele precizate
-     * true - contractul este in asteptare
+     * Starea contractului false - contractul se desfasoara in conformitate cu cele
+     * precizate true - contractul este in asteptare
      */
     private boolean onHold = false;
 
@@ -36,18 +36,23 @@ public final class Contract {
     public Integer getConsumerId() {
         return consumerId;
     }
+
     public void setConsumerId(final int consumerId) {
         this.consumerId = consumerId;
     }
+
     public long getPrice() {
         return price;
     }
+
     public void setPrice(final long price) {
         this.price = price;
     }
+
     public int getRemainedContractMonths() {
         return remainedContractMonths;
     }
+
     public void setRemainedContractMonths(final int remainedContractMonths) {
         this.remainedContractMonths = remainedContractMonths;
     }

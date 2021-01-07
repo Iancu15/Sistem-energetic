@@ -6,6 +6,7 @@ import entity.Consumer;
 
 /**
  * Contine actualizarile ce trebuie efectuate intr-o anumita tura
+ *
  * @author alex
  *
  */
@@ -26,7 +27,7 @@ public final class MonthlyUpdate {
         return distributorChanges;
     }
 
-    public void setDistributorChanges(List<CostChange> distributorChanges) {
+    public void setDistributorChanges(final List<CostChange> distributorChanges) {
         this.distributorChanges = distributorChanges;
     }
 
@@ -34,7 +35,7 @@ public final class MonthlyUpdate {
         return producerChanges;
     }
 
-    public void setProduceChanges(List<CostChange> produceChanges) {
+    public void setProduceChanges(final List<CostChange> produceChanges) {
         this.producerChanges = produceChanges;
     }
 }

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import strategy.EnergyChoiceStrategyType;
 
 @SuppressWarnings("deprecation")
-@JsonPropertyOrder({"id", "energyNeededKW", "price", "budget", "producerStrategy", "isBankrupt", "contracts"})
+@JsonPropertyOrder({ "id", "energyNeededKW", "price", "budget", "producerStrategy", "isBankrupt", "contracts" })
 public final class Distributor implements Entity, Observer {
     private Integer id;
     private int contractLength;
@@ -27,16 +27,20 @@ public final class Distributor implements Entity, Observer {
      */
     private long price;
     /**
-     * Lista cu contractele curente
+     * Lista cu contractele curente consumator <-> distribuitor
      */
     private List<Contract> contracts;
-    
+
     /**
      * Evidenta starii de falimentare
      */
     private boolean isBankrupt = false;
-    private boolean needsToChangeProducer;
-    
+    /**
+     * Este adevarat in cazul in care distribuitorul nu are contract cu vreun producator sau cand
+     * distribuitorul trebuie sa isi reinnoiasca contractele
+     */
+    private boolean needsToChangeProducer = true;
+
     public Distributor() {
         this.contracts = new ArrayList<Contract>();
     }
@@ -45,7 +49,7 @@ public final class Distributor implements Entity, Observer {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -80,13 +84,13 @@ public final class Distributor implements Entity, Observer {
     public void setInfrastructureCost(final int infrastructureCost) {
         this.infrastructureCost = infrastructureCost;
     }
-    
+
     @JsonIgnore
     public long getProductionCost() {
         return productionCost;
     }
 
-    public void setProductionCost(long productionCost) {
+    public void setProductionCost(final long productionCost) {
         this.productionCost = productionCost;
     }
 
@@ -112,7 +116,7 @@ public final class Distributor implements Entity, Observer {
     public long getPrice() {
         return price;
     }
-    
+
     @JsonIgnore
     public long setPrice() {
         return price;
@@ -122,7 +126,7 @@ public final class Distributor implements Entity, Observer {
         return energyNeededKW;
     }
 
-    public void setEnergyNeededKW(int energyNeededKW) {
+    public void setEnergyNeededKW(final int energyNeededKW) {
         this.energyNeededKW = energyNeededKW;
     }
 
@@ -130,7 +134,7 @@ public final class Distributor implements Entity, Observer {
         return producerStrategy;
     }
 
-    public void setProducerStrategy(EnergyChoiceStrategyType producerStrategy) {
+    public void setProducerStrategy(final EnergyChoiceStrategyType producerStrategy) {
         this.producerStrategy = producerStrategy;
     }
 
@@ -138,15 +142,13 @@ public final class Distributor implements Entity, Observer {
         return needsToChangeProducer;
     }
 
-    public void setNeedsToChangeProducer(boolean needsToChangeProducer) {
+    public void setNeedsToChangeProducer(final boolean needsToChangeProducer) {
         this.needsToChangeProducer = needsToChangeProducer;
     }
 
     /**
-     * Schimba costurile si pretul distribuitorului
-     * @param infrastructureCost
-     * @param productionCost
-     * @param entityRegister
+     * Schimba calculeaza pretul ofertei curente pentru distribuitor
+     * @param entityRegister    Registrul de entitati
      */
     public void calculatePrice(final EntityRegister entityRegister) {
         final long profit = Math.round(Math.floor(0.2 * productionCost));
@@ -157,10 +159,10 @@ public final class Distributor implements Entity, Observer {
 
         // numar consumatorii care nu au falimentat tura asta
         int numberOfConsumers = 0;
-        List<Consumer> consumers = entityRegister.getConsumers();
+        final List<Consumer> consumers = entityRegister.getConsumers();
         for (final Contract contract : this.contracts) {
             if (contract.isOnHold()) {
-                Entity consumer = entityRegister.findEntity(contract.getConsumerId(), consumers);
+                final Entity consumer = entityRegister.findEntity(contract.getConsumerId(), consumers);
                 if (((Consumer) consumer).isBankrupt()) {
                     continue;
                 }
@@ -169,7 +171,8 @@ public final class Distributor implements Entity, Observer {
             numberOfConsumers++;
         }
 
-        // calculez costul infrastructurii relative la numarul de consumatori doar in functie
+        // calculez costul infrastructurii relative la numarul de consumatori doar in
+        // functie
         // de consumatorii nefalimentati
         double currentInfrastructureCost;
         if (numberOfConsumers != 0) {
@@ -182,18 +185,9 @@ public final class Distributor implements Entity, Observer {
     }
 
     /**
-     * Recalculez pretul in functie de numarul curent de consumatori
-     * @param entityRegister
-     */
-    public void changeInfrastructureCost(final int infrastructureCost, 
-                                                            final EntityRegister entityRegister) {
-        this.infrastructureCost = infrastructureCost;
-        this.calculatePrice(entityRegister);
-    }
-
-    /**
      * Adauga un nou contract in lista de contracte
-     * @param consumer  Consumatorul cu care se semneaza contractul
+     *
+     * @param consumer Consumatorul cu care se semneaza contractul
      */
     public void addContract(final Consumer consumer) {
         final Contract contract = new Contract(consumer.getId(), this.price, this.contractLength);
@@ -203,6 +197,7 @@ public final class Distributor implements Entity, Observer {
 
     /**
      * Calculeaza noul buget dupa plata costurilor si incasarea ratelor
+     *
      * @param entityRegister
      */
     public void calculateBudget() {
@@ -228,7 +223,8 @@ public final class Distributor implements Entity, Observer {
 
     /**
      * Sterge un contract din lista de contracte
-     * @param consumer  Consumatorul cu care se anuleaza contractul
+     *
+     * @param consumer Consumatorul cu care se anuleaza contractul
      */
     public void removeContract(final Consumer consumer) {
         final Contract expiredContract = findContract(consumer.getId());
@@ -238,8 +234,9 @@ public final class Distributor implements Entity, Observer {
 
     /**
      * Cauta contractul semnat cu un anumit consumator
-     * @param consumerId    Id-ul consumatorului dupa care se cauta
-     * @return  Contractul aferent consumatorului
+     *
+     * @param consumerId Id-ul consumatorului dupa care se cauta
+     * @return Contractul aferent consumatorului
      */
     public Contract findContract(final Integer consumerId) {
         for (final Contract contract : contracts) {
@@ -251,8 +248,13 @@ public final class Distributor implements Entity, Observer {
         return null;
     }
 
+    /**
+     * Functie apelata de producatorii cu care este in contract pentru a-l notifica pe distribuitor
+     * de schimbarea cantitatii, lucru care il obliga pe distribuitor sa isi reinnoiasca contractul
+     * sau sa caute alt producator
+     */
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(final Observable o, final Object arg) {
         this.needsToChangeProducer = true;
     }
 }

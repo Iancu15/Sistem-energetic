@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"id", "isBankrupt", "budget"})
+@JsonPropertyOrder({ "id", "isBankrupt", "budget" })
 public final class Consumer implements Entity {
     private Integer id;
     private long budget;
@@ -27,7 +27,7 @@ public final class Consumer implements Entity {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 

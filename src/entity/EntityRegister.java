@@ -8,6 +8,7 @@ import strategy.EnergyChoiceStrategyType;
 
 /**
  * Registrul ce tine cont de toate entitatile ce au participat in joc
+ *
  * @author alex
  *
  */
@@ -36,13 +37,14 @@ public final class EntityRegister {
         return producers;
     }
 
-    public void setProducers(List<Producer> producers) {
+    public void setProducers(final List<Producer> producers) {
         this.producers = producers;
     }
 
     /**
      * Cauta distribuitorul cu cea mai ieftina rata
-     * @return  Cel mai ieftin distribuitor
+     *
+     * @return Cel mai ieftin distribuitor
      */
     public Distributor getCheapestDistributor() {
         long price = 0;
@@ -65,9 +67,15 @@ public final class EntityRegister {
         return cheapestDistributor;
     }
 
-    public Entity findEntity(final Integer Id, List<? extends Entity> entities) {
+    /**
+     * Cauta entitatea cu id-ul aferent in lista de entitati primita ca parametru
+     * @param Id            Id-ul entitatii cautate
+     * @param entities      Lista in care se afla entitatea cautata
+     * @return              Entitatea cautata
+     */
+    public Entity findEntity(final Integer id, final List<? extends Entity> entities) {
         for (final Entity entity : entities) {
-            if (entity.getId().equals(Id)) {
+            if (entity.getId().equals(id)) {
                 return entity;
             }
         }
@@ -75,12 +83,15 @@ public final class EntityRegister {
         return null;
     }
 
-    public void assignProducersToDistributor(Distributor distributor) {
-        EnergyChoiceStrategyType type = distributor.getProducerStrategy();
-        EnergyChoiceStrategyFactory factory = EnergyChoiceStrategyFactory.getInstance();
-        EnergyChoiceStrategy strategy = factory.createEnergyChoiceStrategy(type);
+    /**
+     * Asignez producatorii catre distribuitor in functie de strategia urmata de acesta
+     * @param distributor       Distribuitorul care isi alege producatorii
+     */
+    public void assignProducersToDistributor(final Distributor distributor) {
+        final EnergyChoiceStrategyType type = distributor.getProducerStrategy();
+        final EnergyChoiceStrategyFactory factory = EnergyChoiceStrategyFactory.getInstance();
+        final EnergyChoiceStrategy strategy = factory.createEnergyChoiceStrategy(type);
         strategy.assignProducers(this.producers, distributor);
-        distributor.calculatePrice(this);
     }
 
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 /**
  * Fabrica singleton de FileWriterClass
+ *
  * @author alex
  *
  */
@@ -13,6 +14,9 @@ public final class FileWriterFactory {
     private FileWriterFactory() {
     }
 
+    /**
+     * @return      instanta singleton a fabricii
+     */
     public static FileWriterFactory getInstance() {
         if (instance == null) {
             instance = new FileWriterFactory();
@@ -22,20 +26,25 @@ public final class FileWriterFactory {
     }
 
     /**
-     * Creeaza o clasa FileWriterClass in functie de modul ales si formatul fisierului de intrare
-     * primit
+     * Creeaza o clasa FileWriterClass in functie de modul ales si formatul
+     * fisierului de intrare primit
+     *
      * @param mode
      * @param inputFormat
      * @return
      * @throws IOException
      */
-    public FileWriterClass createFileWriter(final String mode, final String inputFormat) throws IOException {
-        switch(mode.toLowerCase()) {
-            case "store": return new FileWriterClassStore(inputFormat);
-            case "storecomplete": return new FileWriterClassStoreComplete(inputFormat);
-            case "test": return new FileWriterClassTest();
+    public FileWriterClass createFileWriter(final String mode, final String inputFormat)
+                                                    throws IOException, IllegalArgumentException {
+        switch (mode.toLowerCase()) {
+        case "store":
+            return new FileWriterClassStore(inputFormat);
+        case "storecomplete":
+            return new FileWriterClassStoreComplete(inputFormat);
+        case "test":
+            return new FileWriterClassTest();
+        default:
+            throw new IllegalArgumentException("Invalid mode");
         }
-
-        return null;
     }
 }

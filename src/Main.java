@@ -21,17 +21,23 @@ public class Main {
         final String mode = "test";
         final Writer writer = new Writer(args[0], mode);
 
-        List<Distributor> distributors = entityRegister.getDistributors();
+        // distribuitorii isi aleg producatorii in prima runda
+        final List<Distributor> distributors = entityRegister.getDistributors();
         for (final Distributor distributor : distributors) {
             entityRegister.assignProducersToDistributor(distributor);
         }
 
-        List<Consumer> consumers = entityRegister.getConsumers();
-        List<Producer> producers = entityRegister.getProducers();
+        final List<Consumer> consumers = entityRegister.getConsumers();
+        final List<Producer> producers = entityRegister.getProducers();
         for (int i = 0; i <= input.getNumberOfTurns(); i++) {
             // in cazul in care e pe modul StoreComplete afisez starea jocului de la fiecare tura
             if (mode.toLowerCase().equals("storecomplete")) {
                 writer.writeFile(consumers, distributors, producers);
+            }
+
+            // calculeaza preturile pentru a avea oferte pentru consumatori
+            for (final Distributor distributor : distributors) {
+                distributor.calculatePrice(entityRegister);
             }
 
             final boolean gameStopped = updater.updateConsumers(entityRegister);
@@ -40,18 +46,23 @@ public class Main {
             }
 
             updater.updateDistributors(entityRegister);
-            if (i == input.getNumberOfTurns())
-                break;
-            
-            updater.addMonthlyUpdate(input);
-            
-            for (Distributor distributor : entityRegister.getDistributors()) {
+
+            for (final Distributor distributor : distributors) {
                 if (distributor.needsToChangeProducer()) {
                     entityRegister.assignProducersToDistributor(distributor);
                 }
             }
-            
-            updater.updateProducers(entityRegister, i);
+
+            // prima runda nu se ia in considerare in monthlyStats
+            if (i > 0) {
+                updater.updateProducers(entityRegister, i);
+            }
+
+            if (i == input.getNumberOfTurns()) {
+                break;
+            }
+
+            updater.addMonthlyUpdate(input);
         }
 
         updater.updateContracts(entityRegister);

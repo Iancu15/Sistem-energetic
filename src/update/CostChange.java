@@ -3,11 +3,12 @@ package update;
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import entity.Distributor;
-import entity.EntityRegister;
 import entity.Producer;
 
 /**
- * Contine modificarile de costuri ale unui distributor la finalul unei anumite ture
+ * Contine modificarile de costuri ale unui distributor la finalul unei anumite
+ * ture
+ *
  * @author alex
  *
  */
@@ -22,22 +23,31 @@ public final class CostChange {
     public void setId(final int id) {
         this.id = id;
     }
-    
-    @JsonAlias({"infrastructureCost", "energyPerDistributor"})
+
+    @JsonAlias({ "infrastructureCost", "energyPerDistributor" })
     public int getValueChange() {
         return valueChange;
     }
-    
-    @JsonAlias({"infrastructureCost", "energyPerDistributor"})
-    public void setValueChange(int valueChange) {
+
+    @JsonAlias({ "infrastructureCost", "energyPerDistributor" })
+    public void setValueChange(final int valueChange) {
         this.valueChange = valueChange;
     }
-    
-    public void updateDistributor(Distributor distributor) {
+
+    /**
+     * Actualizeaza costul de productie al distribuitorului primit ca parametru
+     * @param distributor       Distribuitorul asupra caruia se fac actualizari
+     */
+    public void updateDistributor(final Distributor distributor) {
         distributor.setInfrastructureCost(this.valueChange);
     }
-    
-    public void updateProducer(Producer producer) {
+
+    /**
+     * Actualizeaza cantitatea de energie al producatorului dat ca parametru si ii atentioneaza
+     * distribuitorii abonati legat de aceasta schimbare
+     * @param producer          Producatorul asupra caruia se fac actualizari
+     */
+    public void updateProducer(final Producer producer) {
         producer.setEnergyPerDistributor(this.valueChange);
         producer.notifyDistributors();
     }
