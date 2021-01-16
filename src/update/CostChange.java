@@ -6,8 +6,8 @@ import entity.Distributor;
 import entity.Producer;
 
 /**
- * Contine modificarile de costuri ale unui distributor la finalul unei anumite
- * ture
+ * Contine modificarile de costuri ale unui distribuitor la finalul unei anumite
+ * ture si (in cazul nostru) schimbarile de cantitati oferite de producatori
  *
  * @author alex
  *

@@ -14,7 +14,6 @@ public class Main {
 
     public static void main(final String[] args) throws Exception {
         final ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println(args[0]);
         final Input input = objectMapper.readValue(new File(args[0]), Input.class);
         final EntityRegister entityRegister = input.getEntityRegister();
         final Updater updater = new Updater();
@@ -47,17 +46,20 @@ public class Main {
 
             updater.updateDistributors(entityRegister);
 
-            for (final Distributor distributor : distributors) {
-                if (distributor.needsToChangeProducer()) {
-                    entityRegister.assignProducersToDistributor(distributor);
-                }
-            }
-
-            // prima runda nu se ia in considerare in monthlyStats
             if (i > 0) {
+                // in runda initiala se asigneaza distribuitorii la inceput
+                for (final Distributor distributor : distributors) {
+                    if (distributor.needsToChangeProducer()) {
+                        entityRegister.assignProducersToDistributor(distributor);
+                    }
+                }
+
+                // prima runda nu se ia in considerare in monthlyStats
                 updater.updateProducers(entityRegister, i);
             }
 
+            // ultima runda nu are actualizari pentru final de luna asa ca il pun inainte
+            // de addMonthlyUpdate
             if (i == input.getNumberOfTurns()) {
                 break;
             }

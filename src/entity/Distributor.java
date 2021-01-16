@@ -38,6 +38,7 @@ public final class Distributor implements Entity, Observer {
     /**
      * Este adevarat in cazul in care distribuitorul nu are contract cu vreun producator sau cand
      * distribuitorul trebuie sa isi reinnoiasca contractele
+     * l-am setat true pentru ca initial are nevoie de producator
      */
     private boolean needsToChangeProducer = true;
 
