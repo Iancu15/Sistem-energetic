@@ -105,7 +105,7 @@ Consumatorii sunt strans legati de distribuitori, iar distribuitorii sunt
 legati de producatori => nu exista nicio legatura intre consumatori si
 producatori
 
-##### Consumator <-> Distributor
+##### Consumer <-> Distributor
 
 Consumatorii si distribuitorii se leaga prin intermediul clasei Contract ce
 contine id-ul consumatorului si alte specificatii. Clasa Distributor are
@@ -144,8 +144,8 @@ clasa comuna pe care o sa returnez in metoda create din Factory-ul corespondent.
 
 La strategii incapsulez metoda generala de asignare a producatorilor. Am
 metoda selectProducers din clasa EnergyChoiceStrategy ce sorteaza producatorii
-pe baza unui comparator primit ca parametru si apoi asigneaza distribuitorului
-(param) primii N producatori din lista de producatori(param) pana face rost
+pe baza unui comparator primit ca parametru si apoi asigneaza distribuitorului(param)
+primii N producatori din lista de producatori(param) pana face rost
 de energia necesara. Iar in fii clasei abstracte doar trebuie sa creez o clasa
 comparator si sa apelez metoda selectProducers cu comparatorul specific clasei.
 Astfel daca vine un alt developer care vrea sa adauge o alta strategie, el
